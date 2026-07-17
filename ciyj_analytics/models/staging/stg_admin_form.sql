@@ -1,6 +1,6 @@
 -- models/staging/stg_admin_form.sql
 
-{{ config(materialized = 'view')}}
+{{ config(materialized = 'table')}}
 
 WITH source AS (
         SELECT *
