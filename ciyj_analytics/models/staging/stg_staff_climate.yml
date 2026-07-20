@@ -1,0 +1,453 @@
+version: 2
+
+models:
+  - name: stg_staff_climate
+    description: "Staff climate survey responses, including staff demographics, perceptions of safety, job satisfaction, training, and facility quality."
+    columns:
+      - name: staff_climate_survey_id
+        description: "Primary key for the staff climate survey response (PbS staff climate survey ID)."
+        tests:
+          - not_null
+          - unique
+
+      - name: version_number
+        description: "Version number of the submitted staff climate survey."
+
+      - name: collection_period
+        description: "PbS data collection period (e.g., Apr 2025 or Oct 2025)."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Apr 2025', 'Oct 2025']
+
+      - name: respondent_id
+        description: "Identifier of the facility/respondent that submitted the staff climate survey."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_admin_form')
+                field: respondent_id
+
+      - name: created
+        description: "Timestamp the staff climate survey response was created."
+
+      - name: period_begin
+        description: "Start date of the data collection period."
+
+      - name: period_end
+        description: "End date of the data collection period."
+
+      - name: facility_urban_rural
+        description: "Whether the facility is located in an urban or rural area."
+
+      - name: facility_field_avg_name
+        description: "The type of facility: either 'Correction' (long-term commitment facility) or 'Detention' (short-term pre-adjudication facility)."
+
+      - name: facility_region
+        description: "Geographic region of the facility."
+
+      # Staff demographics
+      - name: staff_gender
+        description: "Staff gender."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Male', 'Female', 'Refuse to answer']
+
+      - name: tenure_over_six_months
+        description: "Have you been at this facility for at least six full months?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      # Family engagement
+      - name: staff_value_family_as_partners
+        description: "I value family members and youths’ social supports as partners in my work with the youths."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: believes_family_improves_results
+        description: "I have better results working with the youths when I include families."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: training_improved_family_interaction
+        description: "The training I received has improved the way I interact with families."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: staff_talk_youth_about_family
+        description: "Do staff members talk with youths about the youths’ families and other supportive people?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No']
+
+      - name: ask_youths_about_bad_things
+        description: "Do staff ask youths if any bad or upsetting things have ever happened to them?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know"]
+
+      # Safety: staff
+      - name: facility_safe_for_staff
+        description: "How safe or dangerous do you feel this facility is for staff?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Very safe', 'Safe', 'Unsafe', 'Very dangerous']
+
+      - name: staff_feared_for_safety
+        description: "Within the last six months, have you feared for your safety in this facility?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: injured_by_youth
+        description: "Number of times you have been injured by a youth during the last six months."
+
+      - name: practiced_fire_drill_last_6_months
+        description: "Have you practiced a fire drill at this facility in the last six months?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: can_recommend_security_changes
+        description: "Opportunity to recommend changes in how security is done at this facility."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Fair', 'Poor']
+
+      - name: security_policies_rating
+        description: "How would you rate the security policies and procedures at this facility?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Somewhat good', 'Poor']
+
+      - name: staff_follow_security_procedures
+        description: "How adequately does staff follow security procedures in this facility?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Somewhat good', 'Poor']
+
+      - name: staff_follow_safety_procedures_rating
+        description: "How adequately does staff follow safety procedures in this facility?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Somewhat good', 'Poor']
+
+      - name: safety_policies_rating
+        description: "How would you rate the safety policies and procedures at this facility?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Somewhat good', 'Poor']
+
+      - name: what_would_make_facility_safer
+        description: "Open-ended response: In your opinion, what would make this facility safer."
+
+      - name: what_would_make_facility_safer_other
+        description: "If other, please specify what would make this facility safer."
+
+      # Safety: youth
+      - name: facility_safe_or_dangerous_for_youth
+        description: "How safe or dangerous do you feel this facility is for the youths?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Very safe', 'Safe', 'Unsafe', 'Very dangerous']
+
+      - name: staff_force_only_when_needed
+        description: "Do staff use force only when they really need to?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No']
+
+      # Job satisfaction / organizational
+      - name: job_satisfied
+        description: "I am satisfied with my job."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Strongly Agree', 'Agree', 'Disagree', 'Strongly Disagree']
+
+      - name: supervisor_support_rating
+        description: "How would you rate the support and guidance you receive from your supervisor?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Fair', 'Poor']
+
+      - name: knows_job_expectations
+        description: "I know what my job expectations are."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Strongly Agree', 'Agree', 'Disagree', 'Strongly Disagree']
+
+      - name: has_info_to_perform_job
+        description: "I receive the information I need to perform my job effectively."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Strongly Agree', 'Agree', 'Disagree', 'Strongly Disagree']
+
+      - name: communications_between_areas
+        description: "Communications between all areas at this location are:"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Fair', 'Poor']
+
+      - name: teamwork_on_youth_treatment
+        description: "The manner in which various facility areas work as a team in developing and following through on youths’ treatment/service plans is:"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Fair', 'Poor', 'Not applicable']
+
+      - name: staff_authority_to_discipline_youth
+        description: "Do staff have the authority to discipline youth appropriately?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: staff_authority_to_reward_youth
+        description: "Do staff have the authority to reward youth appropriately?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: behavior_mgmt_system_clear_to_youth_and_staff
+        description: "Is the behavior management system clear and understood by staff and youths?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      # Grievance
+      - name: filed_grievance
+        description: "Within the last six months, have you ever filed a grievance?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: grievance_addressed
+        description: "If you filed a grievance, was your grievance addressed?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      # Training
+      - name: received_training
+        description: "I receive(d) the training I need to perform my job."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Agree', 'Somewhat agree', 'Somewhat disagree', 'Strongly disagree']
+
+      - name: training_improved_skills
+        description: "The training I have received while in this facility has improved my job skills."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Agree', 'Somewhat agree', 'Somewhat disagree', 'Strongly disagree']
+
+      - name: suicide_prevention_training_rating
+        description: "How would you rate training, communications and follow through regarding suicide prevention?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Fair', 'Poor', 'Not applicable']
+
+      - name: prea_training_rating
+        description: "How would you rate training, communications and follow through regarding PREA/zero tolerance of sexual abuse and harassment?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Fair', 'Poor', 'Not applicable']
+
+      - name: training_wanted_write_in
+        description: "If other training, please specify."
+
+      - name: training_would_like_to_see_select
+        description: "What training would you like to see (selected options)."
+
+      - name: training_other
+        description: "If other training, please specify."
+
+      - name: staff_explain_trauma_to_youth
+        description: "Do staff explain to youths what trauma is and why it matters?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know"]
+
+      # Youth treatment quality
+      - name: staff_good_role_models
+        description: "Are the staff good role models?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No']
+
+      - name: staff_care_about_residents
+        description: "Do staff seem to genuinely care about the residents?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No']
+
+      - name: staff_show_residents_respect
+        description: "Do staff members show residents respect?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No']
+
+      - name: staff_treats_residents_fairly
+        description: "Do staff treat residents fairly?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No']
+
+      - name: staff_more_positive_comments
+        description: "Do staff give more positive comments than negative comments to youth?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No']
+
+      - name: able_to_input_youth_treatment
+        description: "I am able to provide input in the development and follow through of youths' individual treatment/service plans."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['True', 'Mostly true', 'Mostly untrue', 'Not true at all', 'Not applicable']
+
+      - name: rewards_used_to_influence_behavior
+        description: "Does the facility use incentives and rewards to influence youths’ behaviors?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No']
+
+      # Programming / facility quality
+      - name: programming_helps_youth_success
+        description: "Programming helps residents understand what they need to do to succeed when they return home."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['True', 'Mostly true', 'Mostly untrue', 'Not true at all', 'Not applicable']
+
+      - name: youth_orientation_rating
+        description: "How would you rate the orientation of youths when they first arrive?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Fair', 'Poor', 'Not applicable']
+
+      - name: health_services_rating_for_youth
+        description: "How would you rate the health services for youths?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Fair', 'Poor', 'Not applicable']
+
+      - name: educational_programming_rating
+        description: "How would you rate educational programming for youths?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Excellent', 'Good', 'Fair', 'Poor', 'Not applicable']
+
+      - name: facility_good_school_program
+        description: "The facility has a good school program."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: facility_good_recreation
+        description: "The facility has a good recreational program."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: rules_fair_to_youths
+        description: "The rules here are fair for youths."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: food_is_good
+        description: "The food is good."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: facility_is_clean
+        description: "The facility is clean."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: everything_works_in_unit
+        description: "Overall, in the housing units, everything is in working order."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: common_areas_clean
+        description: "The common areas are clean."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: youths_have_clothing_toiletries
+        description: "Youths are given the required clothing, shoes, sheets, towels and toiletries."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      # Survey admin
+      - name: survey_administered_date
+        description: "Date survey administered."
+
+      - name: survey_was_blank
+        description: "Survey participation choice."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'I agree to participate in the staff climate survey'
+                  - 'I do not agree to participate in the staff climate survey'

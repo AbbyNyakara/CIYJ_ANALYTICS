@@ -1,5 +1,3 @@
-{{ config(materialized = 'view')}}
-
 -- models/staging/stg_youth_climate.sql
 {{ config(materialized='view') }}
 
