@@ -33,3 +33,8 @@ models:
   ciyj_analytics:
     staging:
       +materialized: table
+
+tests:
+  +store_failures: true
+  # optional but nice so they land in a separate schema
+  +schema: test_failures

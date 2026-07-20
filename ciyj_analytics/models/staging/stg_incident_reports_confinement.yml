@@ -1,0 +1,156 @@
+version: 2
+
+models:
+  - name: stg_incident_reports_confinement
+    description: 'Confinement/isolation incident records with duration, reason, and youth-level demographics.'
+    columns:
+      - name: incident_report_id
+        description: 'Unique identifier for the incident report.'
+        tests:
+          - not_null
+          - unique
+
+      - name: version_number
+        description: 'Version number of the submitted incident report.'
+
+      - name: collection_period
+        description: 'The data collection period this incident report corresponds to.'
+        tests:
+          - not_null
+
+      - name: respondent_id
+        description: 'Identifier of the facility/respondent that submitted the incident report.'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_admin_form')
+                field: respondent_id
+
+      - name: created
+        description: 'Timestamp the incident report record was created.'
+
+      - name: period_begin
+        description: 'Start date of the data collection period.'
+
+      - name: period_end
+        description: 'End date of the data collection period.'
+
+      - name: facility_urban_rural
+        description: 'Whether the facility is located in an urban or rural area.'
+
+      - name: facility_field_avg_name
+        description: "The type of facility: either 'Correction' (long-term commitment facility) or 'Detention' (short-term pre-adjudication facility)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Correction', 'Detention', 'Assessment']
+
+      - name: facility_region
+        description: 'Geographic region of the facility.'
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    'South Region',
+                    'Northeast Region',
+                    'West Region',
+                    'Midwest Region',
+                  ]
+
+      - name: row_number
+        description: 'Row number of the confinement entry within the incident.'
+
+      - name: occurred_date
+        description: '2a. Date incident occurred.'
+
+      - name: occurred_in_living_unit
+        description: '4. Did the incident occur in a living unit?'
+        tests:
+          - accepted_values:
+              values: ['Yes', 'No']
+
+      - name: confinement_type
+        description: 'Incident characteristic indicating that confinement was used as part of the incident response.'
+
+      - name: why_confinement_used
+        description: 'Parent Question: Add each confinement action taken as a result of the incident. Why confinement was used.'
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Consequence for rule violation'
+                  - 'Discipline or punishment'
+                  - 'Sanction'
+                  - 'Give youth time to cool off'
+                  - 'Protect the youth'
+                  - 'Protect other youths or staff'
+                  - 'Protect property'
+                  - 'Self requested'
+                  - 'Declined to participate in program'
+                  - 'Medical'
+                  - 'Mental health'
+                  - 'Other response to misbehavior'
+                  - 'Other'
+
+      - name: if_other
+        description: 'If other reason for confinement was selected, free-text explanation.'
+
+      - name: datetime_in
+        description: 'Date and time the confinement action began (Date in / Time in).'
+
+      - name: datetime_out
+        description: 'Date and time the confinement action ended (Date out / Time out).'
+
+      - name: minutes_in_confinement
+        description: 'Total minutes the youth spent in confinement as a result of the incident.'
+
+      - name: confinement_location
+        description: 'Location where confinement occurred: in the room the youth sleeps or another room/location.'
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'In the room he/she sleeps'
+                  - 'In another room or location'
+
+      - name: youth_id
+        description: 'Youth ID for the confinement action (First choice, Second choice, or Third choice if multiple youths were confined).'
+        tests:
+          - not_null
+
+      - name: gender
+        description: 'Gender of the confined youth.'
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Male', 'Female']
+
+      - name: age
+        description: 'Age of the confined youth at time of incident.'
+
+      - name: ethnicity
+        description: 'Ethnicity of the confined youth.'
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'White, non-Hispanic'
+                  - 'Black, non-Hispanic'
+                  - 'White, Hispanic'
+                  - 'Black, Hispanic'
+                  - 'Other, Hispanic'
+                  - 'American Indian or Alaskan Native'
+                  - 'Native Hawaiian or Other Pacific Islander'
+                  - 'Asian'
+                  - 'Other'
+
+      - name: number_of_youths
+        description: 'Number of youths in rooms when the living unit was locked down as staff responded to the incident.'
+
+      - name: avg_programming_hours_per_day
+        description: 'Average total programming hours per day during segregation or confinement actions.'
+
+      - name: avg_recreation_hours_per_day
+        description: 'Average total recreation hours per day during segregation or confinement actions.'

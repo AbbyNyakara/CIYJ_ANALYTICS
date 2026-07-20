@@ -1,4 +1,4 @@
--- models/staging/stg_incidents_injury.sql
+-- models/staging/stg_incident_reports_injury.sql
 {{ config(materialized='view') }}
 
 WITH source AS (

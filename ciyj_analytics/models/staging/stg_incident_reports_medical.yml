@@ -1,0 +1,108 @@
+version: 2
+
+models:
+  - name: stg_incident_reports_medical
+    description: "Medical incident records with youth demographics and medical examination details resulting from an incident."
+    columns:
+      - name: incident_id
+        description: "Unique identifier for the medical record within the incident." 
+        tests:
+          - not_null
+          # - unique
+
+      - name: version_number
+        description: "Version number of the submitted incident report."
+
+      - name: collection_period
+        description: "PbS data collection period (e.g, Apr 2025 or Oct 2025)."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Apr 2025', 'Oct 2025']
+
+      - name: respondent_id
+        description: "Identifier of the facility/respondent that submitted the incident report."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_admin_form')
+                field: respondent_id
+
+      - name: created_at
+        description: "Timestamp the medical incident record was created."
+
+      - name: period_begin
+        description: "Start date of the data collection period."
+
+      - name: period_end
+        description: "End date of the data collection period."
+
+      - name: facility_urban_rural
+        description: "Whether the facility is located in an urban or rural area."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Rural', 'Urban', 'Suburban']
+
+      - name: facility_field_avg_name
+        description: "The type of facility: either 'Correction' (long-term commitment facility) or 'Detention' (short-term pre-adjudication facility)."
+
+      - name: facility_region
+        description: "Geographic region of the facility."
+
+      - name: row_number
+        description: "Row number of the medical entry within the incident, corresponding to 'Add each medical examination that occurred during the incident to the table below.'"
+
+      - name: occurred_date
+        description: "2a. Date incident occurred."
+
+      - name: occurred_in_living_unit
+        description: "4. Did the incident occur in a living unit?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 0] #drop the 0 perhaps? - or change to majority
+
+      - name: youth_id
+        description: "Youth ID associated with the medical incident (First choice, Second choice, or Third choice if multiple youths were involved)."
+
+      - name: gender
+        description: "Gender of the youth associated with the medical incident."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Male', 'Female']
+
+      - name: age
+        description: "Age of the youth associated with the medical incident at time of incident."
+
+      - name: ethnicity
+        description: "Ethnicity of the youth associated with the medical incident."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'White, non-Hispanic'
+                  - 'Black, non-Hispanic'
+                  - 'White, Hispanic'
+                  - 'Black, Hispanic'
+                  - 'Other, Hispanic'
+                  - 'American Indian or Alaskan Native'
+                  - 'Native Hawaiian or Other Pacific Islander'
+                  - 'Asian'
+                  - 'Other'
+
+      - name: reason_for_examination
+        description: "Parent Question: Add each medical examination that occurred during the incident. Reason the youth was examined by medical staff."
+
+      - name: taken_off_site
+        description: "Indicates whether the youth was taken off-site for medical examination or treatment."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No']
+
+      - name: date_seen_by_medical_staff
+        description: "Date the youth was seen by medical staff."
