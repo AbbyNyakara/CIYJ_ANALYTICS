@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: stg_outcome_measures
+    description: "Outcome measures for each facility and collection period, including numerators, denominators, and calculated results."
+    columns:
+      - name: collection_period
+        description: "PbS data collection period (e.g, Apr 2025 or Oct 2025)."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - "Apr 2025"
+                  - "Oct 2025"
+
+      - name: respondent_id
+        description: "Identifier of the facility/respondent that submitted the outcome measures."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_admin_form')
+                field: respondent_id
+
+      - name: created
+        description: "Timestamp the outcome measure record was created."
+
+      - name: period_begin
+        description: "Start date of the data collection period."
+
+      - name: period_end
+        description: "End date of the data collection period."
+
+      - name: facility_urban_rural
+        description: "Whether the facility is located in an urban or rural area."
+
+      - name: facility_field_avg_name
+        description: "The type of facility: either 'Correction' (long-term commitment facility) or 'Detention' (short-term pre-adjudication facility)."
+
+      - name: facility_region
+        description: "Geographic region of the facility."
+
+      - name: measure_name
+        description: "Short name of the outcome measure (e.g., 'Staff injuries', 'Room confinement')."
+        tests:
+          - not_null
+
+      - name: measure_description
+        description: "Long-form description of what the outcome measure represents."
+
+      - name: display_type
+        description: "Indicates how the outcome measure is displayed (for example, rate, percentage, or count)."
+
+      - name: direction
+        description: "Desired direction of change for the measure (e.g, 'Higher is better', 'Lower is better')."
+
+      - name: numerator
+        description: "Numerator value used to calculate the outcome measure (cast to double)."
+
+      - name: denominator
+        description: "Denominator value used to calculate the outcome measure (cast to double)."
+
+      - name: result
+        description: "Calculated outcome measure result (rate, percentage, or other metric; cast to double)."
