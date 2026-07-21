@@ -77,14 +77,14 @@ SELECT
     (
         COALESCE(AVG(visits_from_family_score), 0)
       + COALESCE(AVG(talked_parent_phone_score), 0)
-    ) / 2.0                                          AS youth_family_frequency_composite,
+    ) / 2.0  AS youth_family_frequency_composite,
 
     -- (2) engagement RELATIONAL QUALITY
     (
         COALESCE(AVG(family_staff_get_along_score), 0)
       + COALESCE(AVG(family_feels_welcomed_score), 0)
       + COALESCE(AVG(family_regularly_talks_score), 0)
-    ) / 3.0                                          AS youth_family_quality_composite
+    ) / 3.0  AS youth_family_quality_composite
 
 FROM youth_scored
 GROUP BY
