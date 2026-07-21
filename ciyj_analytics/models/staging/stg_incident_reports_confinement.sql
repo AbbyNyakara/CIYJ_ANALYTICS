@@ -1,4 +1,4 @@
--- models/staging/stg_incidents_confinement.sql
+-- models/staging/stg_incident_reports_confinement.sql
 {{ config(materialized='view') }}
 
 WITH source AS (
@@ -45,7 +45,7 @@ SELECT
 
     -- Facility-level context for this incident
     TRY_TO_NUMBER(NUMBEROFYOUTHS)                   AS number_of_youths,
-    TRY_TO_FLOAT(AVERAGETOTALPROGRAMMINGHOURSPERDAY) AS avg_programming_hours_per_day,
-    TRY_TO_FLOAT(AVERAGETOTALRECREATIONHOURSPERDAY)  AS avg_recreation_hours_per_day
+    TRY_TO_DOUBLE(AVERAGETOTALPROGRAMMINGHOURSPERDAY) AS avg_programming_hours_per_day,
+    TRY_TO_DOUBLE(AVERAGETOTALRECREATIONHOURSPERDAY)  AS avg_recreation_hours_per_day
 
 FROM source

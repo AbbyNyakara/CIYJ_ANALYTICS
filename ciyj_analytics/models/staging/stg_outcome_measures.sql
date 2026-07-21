@@ -27,8 +27,8 @@ SELECT
     DIRECTION                                       AS direction,
 
     -- Measure values
-    TRY_TO_FLOAT(NUMERATOR)                         AS numerator,
-    TRY_TO_FLOAT(DENOMINATOR)                       AS denominator,
-    TRY_TO_FLOAT(RESULT)                            AS result
+    TRY_TO_DOUBLE(NUMERATOR)                         AS numerator,
+    TRY_TO_DOUBLE(DENOMINATOR)                       AS denominator,
+    TRY_TO_DOUBLE(RESULT)                            AS result
 
 FROM source

@@ -6,6 +6,7 @@ sources:
     schema: CIYJ_SCHEMA
     tables:
       - name: administrative_form
+      - name: incident_reports_all
       - name: incident_reports_assaults
       - name: incident_reports_confinement
       - name: incident_reports_fights

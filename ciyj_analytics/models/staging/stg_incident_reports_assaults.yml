@@ -1,0 +1,108 @@
+version: 2
+
+models:
+  - name: stg_incident_reports_assaults
+    description: "Assault incident records, one row per assault initiator-victim pair per incident."
+    columns:
+      - name: incident_report_id
+        description: "Unique identifier for the incident report."
+        tests:
+          - not_null
+          - unique
+
+      - name: version_number
+        description: "Version number of the submitted incident report."
+
+      - name: collection_period
+        description: "The data collection period this incident report corresponds to."
+        tests:
+          - not_null
+
+      - name: respondent_id
+        description: "Identifier of the facility/respondent that submitted the incident report."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_admin_form')
+              field: respondent_id
+
+      - name: created
+        description: "Timestamp the incident report record was created."
+
+      - name: period_begin
+        description: "Start date of the data collection period."
+
+      - name: period_end
+        description: "End date of the data collection period."
+
+      - name: facility_urban_rural
+        description: "Whether the facility is located in an urban or rural area."
+
+      - name: facility_field_avg_name
+        description: "The type of facility: either 'Correction' (long-term commitment facility) or 'Detention' (short-term pre-adjudication facility)."
+        tests:
+          - accepted_values:
+              values: ['Correction', 'Detention', 'Assessment']
+
+      - name: facility_region
+        description: "Geographic region of the facility."
+        tests:
+          - accepted_values:
+              values: ['South Region', 'Northeast Region', 'West Region', 'Midwest Region']
+
+      - name: row_number
+        description: "Row number of the assault entry within the incident, corresponding to '1. Add each assault that occurred during the incident to the table below.'"
+
+      - name: occurred_date
+        description: "2a. Date incident occurred."
+
+      - name: occurred_in_living_unit
+        description: "4. Did the incident occur in a living unit?"
+        tests:
+          - accepted_values:
+              values: ['Yes', 'No']
+
+      - name: initiated
+        description: "Person who initiated the assault: Youth or Staff."
+        tests:
+          - accepted_values:
+              values: ['Youth', 'Staff']
+
+      - name: victim
+        description: "Person who was the victim of the assault."
+
+      - name: youth_id_who_initiated
+        description: "Youth ID of the person who initiated the assault (First choice, Second choice, or Third choice if multiple youths were involved)."
+
+      - name: initiator_gender
+        description: "Gender of the assault initiator."
+        tests:
+          - accepted_values:
+              values: ['Male', 'Female']
+
+      - name: initiator_age
+        description: "Age of the assault initiator at time of incident."
+
+      - name: initiator_ethnicity
+        description: "Ethnicity of the assault initiator."
+        tests:
+          - accepted_values:
+              values: ['White, non-Hispanic', 'Black, non-Hispanic', 'White, Hispanic', 'Black, Hispanic', 'Other, Hispanic', 'American Indian or Alaskan Native', 'Native Hawaiian or Other Pacific Islander', 'Asian', 'Other']
+
+      - name: youth_id_of_victim
+        description: "Youth ID of the assault victim (First choice, Second choice, or Third choice if multiple youths were involved)."
+
+      - name: victim_gender
+        description: "Gender of the assault victim."
+        tests:
+          - accepted_values:
+              values: ['Male', 'Female']
+
+      - name: victim_age
+        description: "Age of the assault victim at time of incident."
+
+      - name: victim_ethnicity
+        description: "Ethnicity of the assault victim."
+        tests:
+          - accepted_values:
+              values: ['White, non-Hispanic', 'Black, non-Hispanic', 'White, Hispanic', 'Black, Hispanic', 'Other, Hispanic', 'American Indian or Alaskan Native', 'Native Hawaiian or Other Pacific Islander', 'Asian', 'Other']

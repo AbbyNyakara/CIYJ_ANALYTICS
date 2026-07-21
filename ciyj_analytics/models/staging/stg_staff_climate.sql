@@ -1,9 +1,82 @@
+{% set survey_columns = [
+
+    "staff_gender",
+    "tenure_over_six_months",
+
+    "staff_value_family_as_partners",
+    "believes_family_improves_results",
+    "training_improved_family_interaction",
+    "staff_talk_youth_about_family",
+    "ask_youths_about_bad_things",
+
+    "facility_safe_for_staff",
+    "staff_feared_for_safety",
+    "injured_by_youth",
+    "practiced_fire_drill_last_6_months",
+    "can_recommend_security_changes",
+    "security_policies_rating",
+    "staff_follow_security_procedures",
+    "staff_follow_safety_procedures_rating",
+    "safety_policies_rating",
+    "what_would_make_facility_safer",
+
+    "facility_safe_or_dangerous_for_youth",
+    "staff_force_only_when_needed",
+
+    "job_satisfied",
+    "supervisor_support_rating",
+    "knows_job_expectations",
+    "has_info_to_perform_job",
+    "communications_between_areas",
+    "teamwork_on_youth_treatment",
+    "staff_authority_to_discipline_youth",
+    "staff_authority_to_reward_youth",
+    "behavior_mgmt_system_clear_to_youth_and_staff",
+
+    "filed_grievance",
+    "grievance_addressed",
+
+    "received_training",
+    "training_improved_skills",
+    "suicide_prevention_training_rating",
+    "prea_training_rating",
+    "training_wanted_write_in",
+    "training_would_like_to_see_select",
+    "staff_explain_trauma_to_youth",
+
+    "staff_good_role_models",
+    "staff_care_about_residents",
+    "staff_show_residents_respect",
+    "staff_treats_residents_fairly",
+    "staff_more_positive_comments",
+    "able_to_input_youth_treatment",
+    "rewards_used_to_influence_behavior",
+
+    "programming_helps_youth_success",
+    "youth_orientation_rating",
+    "health_services_rating_for_youth",
+    "educational_programming_rating",
+    "facility_good_school_program",
+    "facility_good_recreation",
+    "rules_fair_to_youths",
+    "food_is_good",
+    "facility_is_clean",
+    "everything_works_in_unit",
+    "common_areas_clean",
+    "youths_have_clothing_toiletries",
+
+    "survey_was_blank"
+] %}
+
+
 {{ config(materialized='view') }}
 
 WITH source AS (
     SELECT *
     FROM {{ source('ciyj_raw', 'staff_climate') }}
-)
+),
+
+RENAMED AS (
 
 SELECT
     -- Identifiers
@@ -102,4 +175,9 @@ SELECT
     TRY_TO_DATE(DATESURVEYADMINISTERED, 'YYYY-MM-DD')  AS survey_administered_date,
     WASSURVEYRETURNEDBLANK                              AS survey_was_blank
 
-FROM source
+FROM source 
+)
+
+SELECT *
+FROM renamed
+WHERE {{ filter_sparse_rows(survey_columns, max_nulls=20) }}

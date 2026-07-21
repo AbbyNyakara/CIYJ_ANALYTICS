@@ -1,0 +1,278 @@
+version: 2
+
+models:
+  - name: stg_admin_form
+    description: "Facility-level administrative data per collection period. Anchor table for facility dimensions, staffing, family engagement, and demographic breakdowns."
+    columns:
+      - name: administrative_form_id
+        description: "Unique identifier for the administrative form submission."
+        tests:
+          - not_null
+          - unique
+
+      - name: version_number
+        description: "Version number of the submitted form."
+
+      - name: collection_period
+        description: "The data collection period this form corresponds to."
+        tests:
+          - not_null
+
+      - name: respondent_id
+        description: "Identifier of the facility/respondent that submitted the form."
+        tests:
+          - not_null
+
+      - name: created
+        description: "Timestamp the form record was created."
+
+      - name: period_begin
+        description: "Start date of the data collection period."
+
+      - name: period_end
+        description: "End date of the data collection period."
+
+      - name: facility_urban_rural
+        description: "Whether the facility is located in an urban or rural area."
+
+      - name: facility_field_average_name
+        description: "The type of facility: either 'Correction' (long-term commitment facility) or 'Detention' (short-term pre-adjudication facility)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Correction', 'Detention', 'Assessment']
+
+      - name: facility_region
+        description: "Geographic region of the facility."
+        tests:
+          - accepted_values:
+              values: ['South Region', 'Northeast Region', 'West Region', 'Midwest Region']
+
+
+      - name: youth_population
+        description: "Total youth population at the facility."
+
+      - name: attorney_visits
+        description: "1. How many attorney visits occurred during the data collection period?"
+
+      - name: facility_events_open_to_supportive_people
+        description: "9. How many facility events were open to families and social supports during the data collection period?"
+
+      - name: facility_design_capacity
+        description: "Facility's design capacity."
+
+      - name: grievance_reports_filed_by_youths
+        description: "2. How many grievance reports or complaints were filed by youths during the data collection period?"
+
+      - name: has_liaison_for_families_to_administration
+        description: "8. Does your facility have a family council or a formalized group of parents and family representatives that serves as the liaison for families to the facility administration?"
+        tests:
+          - accepted_values:
+              values: ['Yes', 'No']
+
+      - name: new_staff_in_last_six_months
+        description: "2. How many new direct care staff began work in the facility during the last six months?"
+
+      - name: staff_that_left_in_last_six_months
+        description: "3. How many direct care staff left the facility (e.g transferred, quit, laid off, fired) in the last six months?"
+
+      - name: community_volunteers
+        description: "3. How many volunteers were providing programming in the facility during the data collection period?"
+
+      - name: members_on_the_council
+        description: "8a. If yes, how many members are on the council?"
+
+      - name: programs_using_community_volunteers
+        description: "4. How many facility programs were using volunteers during the data collection period?"
+
+      - name: grievance_reports_filed_by_staff
+        description: "4. How many total grievance reports or complaints were filed by direct care staff during the data collection period?"
+
+      - name: how_many_meetings
+        description: "8b. If yes, how many meetings took place since the last data collection?"
+
+      - name: confirmed_cases_of_abuse_of_youths_by_staff_in_last_six_months
+        description: "6. What is the total number of confirmed cases of abuse or neglect of youths by direct care staff in the last six months?"
+
+      - name: family_included_during_policy_reviews
+        description: "11. Are family members or representatives included when the facility and/or agency conducts policy reviews?"
+        tests:
+          - accepted_values:
+              values: ['Yes', 'No']
+
+      - name: total_number_of_programs
+        description: "5. What is the total number of existing programs at the facility?"
+
+      - name: alleged_cases_of_abuse_of_youths_by_staff_in_last_six_months
+        description: "5. What is the total number of alleged cases of abuse or neglect of youths by facility direct care staff in the last six months?"
+
+      - name: visits_received
+        description: "6. How many visits were received from family and social supports during the data collection period?"
+
+      - name: staff_sanctioned_stun_guns
+        description: "Number of staff sanctioned related to stun gun use."
+
+      - name: alleged_cases_involving_inappropriate_sexual_behavior
+        description: "5a. Of those, how many were cases involving inappropriate sexual behavior?"
+
+      - name: staff_sanction_related_to_youth_in_last_six_months
+        description: "7. What is the total number of incidents of direct care staff subjected to administrative sanction (e.g., suspension, demotion, letter of reprimand) directly related to the treatment of youths in the last six months?"
+
+      - name: average_possible_visitation_hours_per_week
+        description: "7. What is the total number of possible visitation hours per week for an average youth?"
+
+      - name: achievable_levels
+        description: "10. If the facility has a level, phase or points system, what is the total number of levels that can be achieved by youths?"
+
+      - name: confirmed_cases_involving_inappropriate_sexual_behavior
+        description: "6a. Of those, how many were cases involving inappropriate sexual behavior?"
+
+      - name: youths_released_prev_period
+        description: "3. How many youths were released since the end of the previous data collection period?"
+
+      - name: lateral_transfers
+        description: "3a. Of the youths released since the end of the previous data collection period, how many were lateral transfers?"
+
+      - name: youths_released_current_period
+        description: "4. How many youths were released during the current data collection period?"
+
+      - name: youths_released_month_prior
+        description: "5. How many youths were released during the month prior to the current data collection period?"
+
+      - name: average_length_stay
+        description: "6. What is the average length of stay, in days, for youths released since the previous data collection period?"
+
+      - name: idle_waking_hours
+        description: "Number of idle waking hours for youths."
+
+      - name: gender_of_facility_population
+        description: "7. What is the gender of your facility's population?"
+
+      - name: scheduled_shift_change_time
+        description: "Scheduled time of shift change at the facility."
+
+      - name: budgeted_capacity
+        description: "8. What is the facility's budgeted capacity?"
+
+      - name: white_non_hispanic_female_staff
+        description: "Parent Question: White, non-Hispanic — Female staff"
+
+      - name: white_non_hispanic_male_staff
+        description: "Parent Question: White, non-Hispanic — Male staff"
+
+      - name: white_non_hispanic_female_youth
+        description: "Parent Question: White, non-Hispanic — Female youth"
+
+      - name: white_non_hispanic_male_youth
+        description: "Parent Question: White, non-Hispanic — Male youth"
+
+      - name: other_ethnicity_female_staff
+        description: "Parent Question: Other — Female staff"
+
+      - name: other_ethnicity_male_staff
+        description: "Parent Question: Other — Male staff"
+
+      - name: other_ethnicity_female_youth
+        description: "Parent Question: Other — Female youth"
+
+      - name: other_ethnicity_male_youth
+        description: "Parent Question: Other — Male youth"
+
+      - name: other_hispanic_female_staff
+        description: "Parent Question: Other, Hispanic — Female staff"
+
+      - name: other_hispanic_male_staff
+        description: "Parent Question: Other, Hispanic — Male staff"
+
+      - name: other_hispanic_female_youth
+        description: "Parent Question: Other, Hispanic — Female youth"
+
+      - name: other_hispanic_male_youth
+        description: "Parent Question: Other, Hispanic — Male youth"
+
+      - name: black_hispanic_female_staff
+        description: "Parent Question: Black, Hispanic — Female staff"
+
+      - name: black_hispanic_male_staff
+        description: "Parent Question: Black, Hispanic — Male staff"
+
+      - name: black_hispanic_female_youth
+        description: "Parent Question: Black, Hispanic — Female youth"
+
+      - name: black_hispanic_male_youth
+        description: "Parent Question: Black, Hispanic — Male youth"
+
+      - name: youth_location_during_shift_change
+        description: "Location of youths during shift change."
+
+      - name: youth_activity_during_shift_change
+        description: "Activity of youths during shift change."
+
+      - name: shift_change_duration
+        description: "Duration of the shift change."
+
+      - name: asian_female_staff
+        description: "Parent Question: Asian — Female staff"
+
+      - name: asian_male_staff
+        description: "Parent Question: Asian — Male staff"
+
+      - name: asian_female_youth
+        description: "Parent Question: Asian — Female youth"
+
+      - name: asian_male_youth
+        description: "Parent Question: Asian — Male youth"
+
+      - name: pacific_islander_female_staff
+        description: "Parent Question: Native Hawaiian or Other Pacific Islander — Female staff"
+
+      - name: pacific_islander_male_staff
+        description: "Parent Question: Native Hawaiian or Other Pacific Islander — Male staff"
+
+      - name: pacific_islander_female_youth
+        description: "Parent Question: Native Hawaiian or Other Pacific Islander — Female youth"
+
+      - name: pacific_islander_male_youth
+        description: "Parent Question: Native Hawaiian or Other Pacific Islander — Male youth"
+
+      - name: shift_change_meetings_on_weekdays
+        description: "Number of shift change meetings held on weekdays."
+
+      - name: shift_change_meetings_on_weekends
+        description: "Number of shift change meetings held on weekends."
+
+      - name: white_hispanic_female_staff
+        description: "Parent Question: White, Hispanic — Female staff"
+
+      - name: white_hispanic_male_staff
+        description: "Parent Question: White, Hispanic — Male staff"
+
+      - name: white_hispanic_female_youth
+        description: "Parent Question: White, Hispanic — Female youth"
+
+      - name: white_hispanic_male_youth
+        description: "Parent Question: White, Hispanic — Male youth"
+
+      - name: american_indian_female_staff
+        description: "Parent Question: American Indian or Alaskan Native — Female staff"
+
+      - name: american_indian_male_staff
+        description: "Parent Question: American Indian or Alaskan Native — Male staff"
+
+      - name: american_indian_female_youth
+        description: "Parent Question: American Indian or Alaskan Native — Female youth"
+
+      - name: american_indian_male_youth
+        description: "Parent Question: American Indian or Alaskan Native — Male youth"
+
+      - name: black_non_hispanic_female_staff
+        description: "Parent Question: Black, non-Hispanic — Female staff"
+
+      - name: black_non_hispanic_male_staff
+        description: "Parent Question: Black, non-Hispanic — Male staff"
+
+      - name: black_non_hispanic_female_youth
+        description: "Parent Question: Black, non-Hispanic — Female youth"
+
+      - name: black_non_hispanic_male_youth
+        description: "Parent Question: Black, non-Hispanic — Male youth"

@@ -1,5 +1,5 @@
 
--- models/staging/stg_incidents_medical.sql
+-- models/staging/stg_incident_reports_medical.sql
 {{ config(materialized='view') }}
 
 WITH source AS (

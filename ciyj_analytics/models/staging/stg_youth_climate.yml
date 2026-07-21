@@ -1,0 +1,802 @@
+version: 2
+
+models:
+  - name: stg_youth_climate
+    description: "Youth climate survey responses, including demographics, physical activity, education, treatment, family contact, safety, facility environment, staff quality, legal rights, and grievance processes."
+    columns:
+      # Identifiers
+      - name: youth_climate_survey_id
+        description: "Primary key for the youth climate survey response (PbS youth climate survey ID)."
+        tests:
+          - not_null
+          - unique
+
+      - name: version_number
+        description: "Version number of the submitted youth climate survey."
+
+      - name: collection_period
+        description: "PbS data collection period (e.g: Apr 2025 or Oct 2025)."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Apr 2025', 'Oct 2025']
+
+      - name: respondent_id
+        description: "Identifier of the facility/respondent that submitted the youth climate survey."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_admin_form')
+                field: respondent_id
+
+      - name: created_at
+        description: "Timestamp the youth climate survey response was created."
+
+      - name: pbs_form_id
+        description: "Identifier of the specific PbS form instance associated with this youth climate survey."
+
+      # Period
+      - name: period_begin
+        description: "Start date of the data collection period."
+
+      - name: period_end
+        description: "End date of the data collection period."
+
+      # Facility dimensions
+      - name: facility_urban_rural
+        description: 'Whether the facility is located in an urban or rural area.'
+        tests:
+          - accepted_values:
+              arguments:
+                  values: ['Rural', 'Urban', 'Suburban']
+
+      - name: facility_field_average_name
+        description: "The type of facility: either 'Correction' (long-term commitment facility) or 'Detention' (short-term pre-adjudication facility)."
+
+      - name: facility_region
+        description: "Geographic region of the facility."
+
+      # Youth demographics
+      - name: youth_gender
+        description: "Youth gender."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Male', 'Female', 'Refuse to answer']
+
+      # Physical activity
+      - name: weekend_2hrs_physical_exercise
+        description: "On WEEKENDS, do you get at least 2 HOURS of physical exercise per day?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: weekday_1hr_physical_activity
+        description: "On WEEKDAYS, do you get at least 1 HOUR of physical exercise per day?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      # Education
+      - name: attending_school  ## ERROR 1
+        description: "Since coming to this facility, have you been attending school?"
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - "Yes"
+                  - "Sometimes"
+                  - "No"
+                  - "Doesn't apply because I have a GED or high school diploma"
+                  - "Refuse to answer"
+
+      - name: school_helpful_rating
+        description: "How helpful has the school here been to you?"
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Very helpful'
+                  - 'Helpful'
+                  - 'Somewhat helpful'
+                  - 'Not helpful at all'
+                  - 'Refuse to answer'
+
+      - name: facility_has_good_school_program
+        description: "The facility has a good school program."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      # Medical
+      - name: received_medical_care
+        description: "Since coming to this facility, have you ever received medical care?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: medical_care_helpful_rating
+        description: "How helpful was the medical care you received?"
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Very helpful'
+                  - 'Helpful'
+                  - 'Somewhat helpful'
+                  - 'Not helpful at all'
+                  - 'Refuse to answer'
+
+      # Treatment plan
+      - name: has_treatment_or_service_plan ## ERROR 3
+        description: "Do you have a treatment or service plan?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: involved_in_treatment_plan
+        description: "I was involved when people were talking about what should go in my treatment or service plan."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'True'
+                  - 'Mostly true'
+                  - 'Mostly untrue'
+                  - 'Not true at all'
+                  - 'Refuse to answer'
+
+      - name: treatment_plan_supports_goals
+        description: "My treatment or service plan helps me understand what I must do to reach my goals."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'True'
+                  - 'Mostly true'
+                  - 'Mostly untrue'
+                  - 'Not true at all'
+                  - 'Refuse to answer'
+
+      - name: programming_helps_understand
+        description: "Programming helps me understand what I need to do to succeed when I return home."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'True'
+                  - 'Mostly true'
+                  - 'Mostly untrue'
+                  - 'Not true at all'
+                  - 'Refuse to answer'
+
+      # Phase / behavior system
+      - name: phase_system_for_rewards
+        description: "Is there a level, phase or points system that ties behavior to rewards and responsibilities?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: understands_phase_system
+        description: "Do you understand the level, phase or points system in this facility?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: knows_current_phase
+        description: "Do you know what level, phase or points you are on?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: phase_level
+        description: "If yes, what level, phase or points are you on?"
+
+      # Family engagement: phone contact
+      - name: talked_with_parent_phone
+        description: "Have you talked on the phone with your parent and/or guardian?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: parent_phone_frequency
+        description: "How often do you talk on the phone with your parent/guardian?"
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Less than once a month'
+                  - 'Once a month'
+                  - '2 - 3 times per month'
+                  - '1 - 2 times per week'
+                  - '3 - 4 times per week'
+                  - '5 or more times per week'
+
+      - name: staff_phone_calls_fair
+        description: "How fair are staff in applying the rules about telephone calls?"
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Very fair'
+                  - 'Fair'
+                  - 'Somewhat fair'
+                  - 'Not fair at all'
+                  - 'Refuse to answer'
+
+      - name: parents_phone_calls_with_children_freq
+        description: "How often did you talk on the phone with your child(ren)?"
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Less than once a month'
+                  - 'Once a month'
+                  - '2-3 times a month'
+                  - '1-2 times a week'
+                  - '3-4 times a week'
+                  - '5 or more times a week'
+
+      - name: talked_on_phone_with_children
+        description: "Have you talked on the phone with your child(ren)?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      # Family engagement: visits
+      - name: visits_from_family
+        description: "Have you gotten visits from your family?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: family_visit_frequency
+        description: "How often do you get visits from your family?"
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Less than once a month'
+                  - 'Once a month'
+                  - '2 - 3 times per month'
+                  - '1 - 2 times per week'
+                  - '3 - 4 times per week'
+                  - '5 or more times per week'
+                  - 'Refuse to answer'
+
+      - name: why_no_visit_reason
+        description: "What would make it easier for your family to visit?"
+
+      - name: visits_from_children_freq
+        description: "How often did you get visits from your child(ren)?"
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Less than once a month'
+                  - 'Once a month'
+                  - '2-3 times a month'
+                  - '1-2 times a week'
+                  - '3-4 times a week'
+                  - '5 or more times a week'
+
+      - name: received_visits_from_children
+        description: "Have you gotten visits from your child(ren)?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: no_visits_from_children_reason
+        description: "What would make it easier to visit with your child?"
+
+      - name: youth_does_not_want_visit
+        description: "Indicates whether you do not want to visit your family."
+
+      - name: has_no_family
+        description: "Indicates whether you report having no family."
+
+      # Family engagement: quality / barriers
+      - name: family_staff_get_along
+        description: "My family and staff generally get along with each other."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: family_feels_welcomed
+        description: "My family feels welcomed at this facility."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: barrier_distance
+        description: "Barrier to visits: family lives too far to visit often."
+
+      - name: barrier_transportation
+        description: "Barrier to visits: family does not have transportation."
+
+      - name: barrier_family_unwilling
+        description: "Barrier to visits: family does not want to visit."
+
+      - name: family_regularly_talks_to_staff
+        description: "My family talks regularly with staff at this facility."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: judge_prohibited_visits
+        description: "Judge has prohibited visits."
+
+      - name: no_visiting_hours
+        description: "There are no visiting hours."
+
+      - name: visiting_hours_bad_for_family
+        description: "Visiting hours are bad for my family."
+
+      - name: youth_has_children
+        description: "Do you have any children?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      # Safety: victimization
+      - name: feared_for_safety_last_6_months
+        description: "Do you fear for your safety in this facility?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: been_beaten_up_last_6_months
+        description: "Within the last six months, have you been beaten up or threatened with being beaten up?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: property_stolen_last_6_months
+        description: "Within the last six months, have you had personal property stolen by force or threat?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: forced_sexual_activity
+        description: "Within the last six months, has anyone forced you to engage in sexual activity?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: victimization_how_often
+        description: "How many times did this happen?"
+
+      - name: victimization_who
+        description: "Who did this to you?"
+
+      - name: victimization_reported
+        description: "Was this incident reported to someone who could help you?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: actions_to_stop_reoccurrence
+        description: "Has anything been done to stop this from happening again?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: injuries_beyond_sexual_assault
+        description: "Other than the sexual assault, did you have any injuries?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: injuries_suffered
+        description: "If you had injuries, what types of injuries did you suffer?"
+
+      - name: received_medical_care_for_injury
+        description: "Did you receive medical care as a result of any injuries?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: victimization_location
+        description: "Where did this take place?"
+
+      # Safety: behavior
+      - name: involved_in_fights
+        description: "Within the last six months, have you been involved in fights?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: locked_up_for_misbehavior
+        description: "Since you have been in this facility, have you ever been locked down because of misbehavior?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: longest_time_locked_up_alone
+        description: "Longest time you were locked down alone without contact with other youth."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Less than one hour'
+                  - 'One day or less'
+                  - '1 - 3 days'
+                  - '4 -7 days'
+                  - 'More than one week'
+                  - 'Refuse to answer'
+
+      - name: knows_fire_procedure
+        description: "Do you know what procedure to follow if there is a fire here?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      # Facility environment
+      - name: facility_is_clean
+        description: "The facility is clean."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: food_is_good
+        description: "The food is good."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: facility_good_recreation
+        description: "The facility has a good recreational program."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: rules_are_fair
+        description: "The rules here are fair."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: everything_works_in_unit
+        description: "Everything is working in the unit you live in."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: has_clothing_and_toiletries
+        description: "You have been given required clothing, shoes, sheets, towels and toiletries."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: common_areas_clean
+        description: "The common areas are clean."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: knows_how_to_find_help
+        description: "Do you know how to find help if someone assaults or threatens you?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      # Staff quality
+      - name: staff_show_respect
+        description: "Do staff members show residents respect?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_respect_frequency
+        description: "How many times did this happen?"
+
+      - name: staff_good_role_models
+        description: "Are the staff good role models?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_seem_to_care
+        description: "Do staff seem to genuinely care about the residents?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_use_force_only_when_needed
+        description: "Do staff use force only when they really need to?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_more_positive_comments
+        description: "Do staff make more positive comments than negative comments?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_fair_discipline
+        description: "Are staff members fair about discipline issues?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_follows_through
+        description: "Do staff follow through with what they say?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_let_make_choices
+        description: "Do staff often let you make choices?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_help_calm
+        description: "Do staff help you calm down before you get really upset?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: trust_staff
+        description: "Overall, do you trust the staff at this facility?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: consistent_answers_from_staff
+        description: "I get the same answer to a question, no matter who I ask."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: private_conversations_not_overheard
+        description: "I am confident private conversations cannot be overheard."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      # Staff / communication
+      - name: staff_discussed_rules
+        description: "Did a staff member discuss the facility rules with you upon admission?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: staff_interested_in_youth_views
+        description: "Are staff members interested in what you have to say?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_listens_to_youth_suggestions
+        description: "Do staff here listen to you if you want something changed?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_interested_in_family_views
+        description: "Are staff members interested in what your family has to say?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_respects_youth_culture
+        description: "Do staff here respect your traditions, beliefs and culture?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: staff_asked_about_bad_things
+        description: "Has someone from the facility asked you if any bad or upsetting things have ever happened to you?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: staff_asked_about_family_support
+        description: "Have staff asked you how your family and friends help you?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'Sometimes', 'No', 'Refuse to answer']
+
+      - name: facility_explained_trauma
+        description: "Has someone from the facility explained what trauma is and why it matters?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      # Legal rights / lawyer access
+      - name: has_lawyer ## ERROR 2
+        description: "Do you presently have a lawyer?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: asked_to_see_lawyer
+        description: "Since you came to this facility, have you asked TO SEE your lawyer?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: allowed_to_see_lawyer
+        description: "If yes, were you allowed TO SEE your lawyer?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: asked_to_call_lawyer
+        description: "Since you came to this facility, have you asked TO CALL your lawyer?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: allowed_to_call_lawyer
+        description: "If yes, were you allowed TO CALL your lawyer?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: asked_to_write_lawyer
+        description: "Since you came to this facility, have you asked TO WRITE to your lawyer?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: allowed_to_write_lawyer
+        description: "If yes, were you allowed TO WRITE to your lawyer?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: written_copy_legal_rights
+        description: "Did a staff member give you a written copy of your legal rights?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: staff_discusses_legal_rights
+        description: "Did a staff member discuss these legal rights with you upon admission?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: understands_legal_rights
+        description: "Do you understand these legal rights?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      # Rules understanding
+      - name: written_copy_of_rules
+        description: "Did a staff member give you a written copy of the facility rules upon admission?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', "Don't know", 'Refuse to answer']
+
+      - name: understands_facility_rules
+        description: "Do you understand the facility rules?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: does_not_understand_rules_reason
+        description: "If not, why don't you understand the facility rules?"
+
+      # Grievance
+      - name: knows_grievance_process
+        description: "Do you know how to file a grievance if you are being mistreated?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: no_retaliation_for_grievance
+        description: "Nothing bad will happen to me if I file a grievance."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'True'
+                  - 'Mostly true'
+                  - 'Somewhat true'
+                  - 'Not true at all'
+                  - 'Refuse to answer'
+
+      - name: filed_grievance_last_6_months
+        description: "Within the last six months, have you ever filed a grievance?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: grievance_addressed
+        description: "If you filed a grievance, was your grievance addressed?"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Yes', 'No', 'Refuse to answer']
+
+      - name: who_to_contact_with_problems
+        description: "When you leave here, who will you call when you need to talk or need help working out a problem?"
+
+      # Survey admin
+      - name: survey_administered
+        description: "Date survey administered."
+
+      - name: survey_was_blank
+        description: "Youth climate survey participation choice."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'I agree to participate in the youth climate survey'
+                  - 'I do not agree to participate in the youth climate survey'
