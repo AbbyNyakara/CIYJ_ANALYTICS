@@ -36,7 +36,7 @@ WITH staff_scored AS (
         CASE ask_youths_about_bad_things
             WHEN 'Yes' THEN 1
             WHEN 'No'  THEN 0
-            -- "Don't know" left as NULL, excluded from AVG
+            -- "Don't know" interpreted as NULL, excluded from AVG
         END AS asked_about_bad_things_score
 
     FROM {{ ref('stg_staff_climate') }}
@@ -49,9 +49,9 @@ SELECT
     facility_field_avg_name,
     facility_region,
 
-    COUNT(*)                                       AS staff_response_count,
+    COUNT(*)                                        AS staff_response_count,
 
-    AVG(value_family_score)                        AS avg_value_family_score,
+    AVG(value_family_score)                         AS avg_value_family_score,
     AVG(believes_family_helps_score)                AS avg_believes_family_helps_score,
     AVG(training_improved_interaction_score)        AS avg_training_improved_interaction_score,
     AVG(talk_about_family_score)                    AS avg_talk_about_family_score,
@@ -64,7 +64,20 @@ SELECT
       + COALESCE(AVG(training_improved_interaction_score), 0)
       + COALESCE(AVG(talk_about_family_score), 0)
       + COALESCE(AVG(asked_about_bad_things_score), 0)
-    ) / 5.0                                         AS staff_family_engagement_composite
+    ) / 5.0                                         AS staff_family_engagement_composite,
+
+    -- Composite staff family attitudes
+    (
+    COALESCE(AVG(value_family_score), 0)
+    + COALESCE(AVG(believes_family_helps_score), 0)
+    + COALESCE(AVG(training_improved_interaction_score), 0)
+    ) / 3.0 AS staff_family_attitude_composite,
+
+    -- Composite staff_family_conversation_composite
+    (
+      COALESCE(AVG(talk_about_family_score), 0)
+    + COALESCE(AVG(asked_about_bad_things_score), 0)
+    ) / 2.0 AS staff_family_conversation_composite
 
 FROM staff_scored
 GROUP BY
