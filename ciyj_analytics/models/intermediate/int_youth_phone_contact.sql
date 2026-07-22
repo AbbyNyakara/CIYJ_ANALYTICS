@@ -43,7 +43,7 @@ SELECT
     AVG(parent_phone_frequency_score)     AS avg_parent_phone_frequency,
     AVG(staff_phone_calls_fair_score)     AS avg_staff_phone_calls_fair,
 
-    -- FREQUENCY composite (normalized to 0-1 scale using /6 for the 6-point item)
+    -- FREQUENCY composite (normalized to 0-1 scale using /5 for the 6-point item)
     (
         COALESCE(AVG(talked_with_parent_phone_score), 0)
        + COALESCE((AVG(parent_phone_frequency_score) - 1) / 5.0, 0)
