@@ -6,9 +6,6 @@ WITH youth_scored AS (
     SELECT
         respondent_id,
         collection_period,
-        facility_urban_rural,
-        facility_field_average_name AS facility_field_avg_name,
-        facility_region,
 
         -- Frequency indicators (raw yes/no)
         CASE visits_from_family
@@ -50,9 +47,6 @@ WITH youth_scored AS (
 SELECT
     respondent_id,
     collection_period,
-    facility_urban_rural,
-    facility_field_avg_name,
-    facility_region,
 
     COUNT(*)                                        AS youth_response_count,
 
@@ -89,7 +83,4 @@ SELECT
 FROM youth_scored
 GROUP BY
     respondent_id,
-    collection_period,
-    facility_urban_rural,
-    facility_field_avg_name,
-    facility_region
+    collection_period

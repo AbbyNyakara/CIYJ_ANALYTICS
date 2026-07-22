@@ -6,9 +6,6 @@ WITH staff_scored AS (
     SELECT
         respondent_id,
         collection_period,
-        facility_urban_rural,
-        facility_field_avg_name,
-        facility_region,
 
         -- Convert Yes/No family engagement questions to 1/0
         CASE staff_value_family_as_partners
@@ -45,9 +42,6 @@ WITH staff_scored AS (
 SELECT
     respondent_id,
     collection_period,
-    facility_urban_rural,
-    facility_field_avg_name,
-    facility_region,
 
     COUNT(*)                                        AS staff_response_count,
 
@@ -56,15 +50,6 @@ SELECT
     AVG(training_improved_interaction_score)        AS avg_training_improved_interaction_score,
     AVG(talk_about_family_score)                    AS avg_talk_about_family_score,
     AVG(asked_about_bad_things_score)               AS avg_asked_about_bad_things_score,
-
-    -- Composite staff family engagement score
-    (
-        COALESCE(AVG(value_family_score), 0)
-      + COALESCE(AVG(believes_family_helps_score), 0)
-      + COALESCE(AVG(training_improved_interaction_score), 0)
-      + COALESCE(AVG(talk_about_family_score), 0)
-      + COALESCE(AVG(asked_about_bad_things_score), 0)
-    ) / 5.0                                         AS staff_family_engagement_composite,
 
     -- Composite staff family attitudes
     (
@@ -82,7 +67,4 @@ SELECT
 FROM staff_scored
 GROUP BY
     respondent_id,
-    collection_period,
-    facility_urban_rural,
-    facility_field_avg_name,
-    facility_region
+    collection_period
