@@ -31,10 +31,19 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   ciyj_analytics:
-    staging:
-      +materialized: table
+    +materialized: view
+    +persist_docs: 
+      relation: true
+      columns: true
+    +hours_to_expiration: null
 
-tests:
+
+data_tests:
   +store_failures: true
   # optional but nice so they land in a separate schema
   +schema: test_failures
+  ciyj_analytics:
+    +severity: warn
+    # marts:
+    #   +severity: error
+

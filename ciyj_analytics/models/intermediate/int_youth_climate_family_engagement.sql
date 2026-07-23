@@ -82,5 +82,5 @@ SELECT
 
 FROM youth_scored
 GROUP BY
-    respondent_id,
+    respondent_id, 
     collection_period
