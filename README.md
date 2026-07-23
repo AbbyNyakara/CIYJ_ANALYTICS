@@ -227,4 +227,4 @@ Statistical models used:
 
 **Abby Nyakara**  
 ML/AI Engineer & Data Scientist  
-Jackson, Michigan
+Lansing, Michigan
