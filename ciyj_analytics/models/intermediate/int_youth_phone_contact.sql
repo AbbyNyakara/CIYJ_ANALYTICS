@@ -5,9 +5,6 @@ WITH youth_phone_scored AS (
     SELECT
         respondent_id,
         collection_period,
-        facility_urban_rural,
-        facility_field_average_name AS facility_field_avg_name,
-        facility_region,
 
         CASE talked_with_parent_phone
             WHEN 'Yes' THEN 1
@@ -36,9 +33,9 @@ WITH youth_phone_scored AS (
 SELECT
     respondent_id,
     collection_period,
-    facility_urban_rural,
-    facility_field_avg_name,
-    facility_region,
+    -- facility_urban_rural,
+    -- facility_field_avg_name,
+    -- facility_region,
 
     COUNT(*) AS youth_response_count,
 
@@ -46,10 +43,10 @@ SELECT
     AVG(parent_phone_frequency_score)     AS avg_parent_phone_frequency,
     AVG(staff_phone_calls_fair_score)     AS avg_staff_phone_calls_fair,
 
-    -- FREQUENCY composite (normalized to 0-1 scale using /6 for the 6-point item)
+    -- FREQUENCY composite (normalized to 0-1 scale using /5 for the 6-point item)
     (
         COALESCE(AVG(talked_with_parent_phone_score), 0)
-      + COALESCE(AVG(parent_phone_frequency_score) / 6.0, 0)
+       + COALESCE((AVG(parent_phone_frequency_score) - 1) / 5.0, 0)
     ) / 2.0 AS phone_contact_frequency_composite,
 
     -- QUALITY composite (normalized to 0-1 scale using /3 for the 3-point item)
@@ -58,7 +55,4 @@ SELECT
 FROM youth_phone_scored
 GROUP BY
     respondent_id,
-    collection_period,
-    facility_urban_rural,
-    facility_field_avg_name,
-    facility_region
+    collection_period

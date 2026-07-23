@@ -9,7 +9,6 @@ with int_admin_family_engagement AS (
         CASE WHEN family_included_during_policy_reviews = 'Yes' THEN 1 ELSE 0 END AS family_included_during_policy_reviews,
         visits_received
     FROM {{ ref('stg_admin_form') }}
-
 )
 
 SELECT *
